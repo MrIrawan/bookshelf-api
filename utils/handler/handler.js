@@ -5,11 +5,32 @@ const getAllBooks = (req, handler) => {
     const filteredBooks = books.map(({ id, name, publisher }) => ({ id, name, publisher }));
 
     const response = handler.response({
-        status: 'Success get all books',
+        status: 'success',
         code: 200,
         data: {
             books: books ? filteredBooks : [],
         },
+    }).code(200);
+
+    return response;
+}
+
+const getDetailBook = (req, handler) => {
+    const { bookId } = req.params;
+    const book = books.find((book) => book.id === bookId);
+
+    if (!book) {
+        return handler.response({
+            status: 'fail',
+            message: 'Buku tidak ditemukan',
+        }).code(404);
+    }
+
+    const response = handler.response({
+        status: 'success',
+        data: {
+            book
+        }
     }).code(200);
 
     return response;
@@ -27,11 +48,19 @@ const addBook = (req, handler) => {
         reading
     } = req.payload;
 
-    if (!name && !publisher) {
+    if (!name) {
         return handler.response({
             status: 'fail',
             code: 400,
-            message: 'Gagal menambahkan buku. Mohon isi nama buku dan penerbit',
+            message: 'Gagal menambahkan buku. Mohon isi nama buku',
+        }).code(400);
+    }
+
+    if (!publisher) {
+        return handler.response({
+            status: 'fail',
+            code: 400,
+            message: 'Gagal menambahkan buku. Mohon isi penerbit buku.',
         }).code(400);
     }
 
@@ -146,4 +175,4 @@ const deleteBook = (req, handler) => {
     return response;
 }
 
-module.exports = { getAllBooks, addBook, updateBook, deleteBook };
+module.exports = { getAllBooks, getDetailBook, addBook, updateBook, deleteBook };
