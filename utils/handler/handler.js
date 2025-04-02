@@ -1,4 +1,5 @@
 const { nanoid } = require('nanoid');
+const { findIndexBooks } = require('../books/findIndexBooks');
 const books = require('../books/books');
 
 const getAllBooks = (req, handler) => {
@@ -6,7 +7,6 @@ const getAllBooks = (req, handler) => {
 
     const response = handler.response({
         status: 'success',
-        code: 200,
         data: {
             books: books ? filteredBooks : [],
         },
@@ -155,15 +155,15 @@ const updateBook = (req, handler) => {
 
 const deleteBook = (req, handler) => {
     const { id } = req.params;
-    const bookIndex = books.findIndex((book) => book.id === id);
+    const bookIndex = findIndexBooks(id, books);
 
-    if (bookIndex === -1) {
+    if (bookIndex === false) {
         return handler.response({
             status: 'fail',
-            code: 404,
-            message: 'Gagal menghapus buku. Id tidak ditemukan',
-        }.code(404));
+            message: 'Buku gagal dihapus. Id tidak ditemukan'
+        }).code(404);
     }
+
 
     books.splice(bookIndex, 1);
 
