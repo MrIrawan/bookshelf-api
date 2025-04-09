@@ -114,11 +114,11 @@ const updateBook = (req, handler) => {
         }.code(404));
     }
     
-    if (!name && !publisher) {
+    if (!name) {
         return handler.response({
             status: 'fail',
             code: 400,
-            message: 'Gagal memperbarui buku. Mohon isi nama buku dan penerbit',
+            message: 'Gagal memperbarui buku. Mohon isi nama buku',
         }.code(400));
     }
 
