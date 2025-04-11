@@ -114,10 +114,9 @@ const updateBook = (req, handler) => {
         }.code(404));
     }
     
-    if (!name) {
+    if (name.length === 0) {
         return handler.response({
             status: 'fail',
-            code: 400,
             message: 'Gagal memperbarui buku. Mohon isi nama buku',
         }.code(400));
     }
@@ -125,7 +124,6 @@ const updateBook = (req, handler) => {
     if (readPage > pageCount) {
         return handler.response({
             status: 'fail',
-            code: 400,
             message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
         }.code(400));
     }
@@ -155,21 +153,18 @@ const updateBook = (req, handler) => {
 
 const deleteBook = (req, handler) => {
     const { id } = req.params;
-    const bookIndex = findIndexBooks(id, books);
+    const bookIndex = books.findIndex((book) => book.id === id);
 
-    if (bookIndex === false) {
+    if (bookIndex === -1) {
         return handler.response({
             status: 'fail',
-            message: 'Buku gagal dihapus. Id tidak ditemukan'
+            message: 'Buku gagal dihapus. Id tidak ditemukan',
         }).code(404);
     }
 
-
-    books.splice(bookIndex, 1);
-
     const response = handler.response({
         status: 'success',
-        message: 'Buku berhasil dihapus'
+        message: 'Buku berhasil dihapus',
     }).code(200);
 
     return response;
